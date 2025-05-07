@@ -18,11 +18,14 @@ Características
 
 
 🔧 Instalación
+
 1️⃣ Requisitos
+
 - Windows 10/11
 - Python 3.11+
 - Dependencias indicadas en requirements.txt
 2️⃣ Instalar Dependencias
+
 Antes de ejecutar la herramienta, instala los paquetes necesarios con:
 
 pip install -r requirements.txt
@@ -35,22 +38,33 @@ python gui.py
 
 
 🎮 Uso
+
 📂 Análisis de Directorios
+
 Detecta archivos sospechosos por extensión y tamaño, además de analizar metadatos en imágenes y PDFs.
 Desde la interfaz gráfica, haz clic en "Analiza directorio" y selecciona la carpeta deseada.
+
 🖼️ Extracción de Metadatos
+
 - Imágenes: Evalúa información EXIF.
 - PDFs: Inspecciona metadata oculta y objetos de acción (/OpenAction).
+
 🛜 Escaneo de Red
+
 Revisa las conexiones TCP establecidas con detalles sobre IPs locales y remotas.
 Haz clic en "Escanea tu red" para obtener un informe.
+
 🔑 Gestión de Contraseñas
+
 - Generar contraseña: Usa el botón "Genera tu contraseña" para obtener una clave segura con su has correspondiente.
 - Verificar contraseñas: Si una clave ha sido filtrada, NetGuardian te notificará.
+
 📄 Formato de Reportes
+
 El resultado de los análisis puede guardarse automáticamente en TXT o CSV.
 
 🛠️ Módulos
+
 | Módulo                |                 Descripción                       | 
 | directory_analyzer.py | Analiza directorios, evalúa metadatos y detecta   |
 |                       | archivos sospechosos.                             | 
@@ -62,8 +76,8 @@ El resultado de los análisis puede guardarse automáticamente en TXT o CSV.
 | gui.py                | Interfaz gráfica que gestiona todas las funciones.| 
 
 
-
 📝 Notas Finales
+
 - NetGuardian está optimizado para Windows.
 - Se recomienda ejecutarlo en un entorno seguro antes de analizar archivos   
   críticos.
