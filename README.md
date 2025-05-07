@@ -3,6 +3,7 @@
 NetGuardian es una herramienta de seguridad informática diseñada para Windows que permite analizar directorios, extraer y verificar metadatos, escanear conexiones de red, generar y verificar contraseñas, e identificar potenciales riesgos en archivos PDF.
 Su objetivo es facilitar la detección de archivos sospechosos, identificar inyecciones de código en documentos y ayudar a los usuarios a fortalecer sus credenciales.
 
+Antes que nada dentro de la carpeta modulos hay una carpeta llamada "dist" ahi es donde ya  tienen empaquetado en un ejecutable el programa. De todas maneras si prefieren ejecutarlo desde la CMD el modulo que deben ejecutar es gui.py
 Características
 ✅ Análisis de directorios → Identifica archivos potencialmente sospechosos por extensión y tamaño.
 ✅ Extracción y evaluación de metadatos en imágenes y PDFs → Examina archivos en busca de contenido anómalo o riesgos potenciales.
