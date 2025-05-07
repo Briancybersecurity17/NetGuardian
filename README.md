@@ -7,6 +7,7 @@ Antes que nada dentro de la carpeta modulos hay una carpeta llamada "dist" ahi e
 
 
 Características
+
 ✅ Análisis de directorios → Identifica archivos potencialmente sospechosos por extensión y tamaño.
 ✅ Extracción y evaluación de metadatos en imágenes y PDFs → Examina archivos en busca de contenido anómalo o riesgos potenciales.
 ✅ Detección de JavaScript en PDFs → Identifica código incrustado en documentos que pueda ejecutar acciones automáticamente.
