@@ -34,6 +34,8 @@ Si deseas instalar cada módulo individualmente, puedes usar:
 
 pip install PyPDF2 reportlab Pillow psutil bcrypt requests
 
+Para ejecutar la herramienta (dentro de la carpeta donde esta gui.py)
+
 python gui.py
 
 
