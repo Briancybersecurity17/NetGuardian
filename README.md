@@ -65,14 +65,19 @@ El resultado de los análisis puede guardarse automáticamente en TXT o CSV.
 
 🛠️ Módulos
 
-| Módulo                |                 Descripción                       | 
+| Módulo                |                 Descripción                       |
+
 | directory_analyzer.py | Analiza directorios, evalúa metadatos y detecta   |
-|                       | archivos sospechosos.                             | 
+|                       | archivos sospechosos.                             |
+
 | network_scanner.py    | Escanea conexiones TCP activas en el sistema.     |
+
 | password_generator.py | Genera contraseñas seguras con hashing SHA-256,   |        
-|                       | SHA-512 o bcrypt.                                 |  
+|                       | SHA-512 o bcrypt.                                 | 
+
 | verificar_password.py | Verifica si una contraseña ha sido filtrada usando|
 |                       | Have I Been Pwned.                                | 
+
 | gui.py                | Interfaz gráfica que gestiona todas las funciones.| 
 
 
