@@ -143,24 +143,36 @@ def handle_verify_password_input(user_input):
 
 def handle_network_scan():
     try:
-        cancel_pending_input()  # Cancela cualquier ingreso pendiente
+        cancel_pending_input()
         result_text.config(state="normal")
         result_text.delete("1.0", tk.END)
         result_text.config(state="disabled")
-        
+
         conns = scan_network_connections()
-        
+
         if not conns:
             update_results("No se encontraron conexiones TCP establecidas.")
         else:
-            # Suponiendo que ya sean diccionarios...
             conns.sort(key=lambda x: (x["state"], x["local"]))
-            header = f"{'Local Address':<45} | {'Remote Address':<45} | {'Estado':<12}"
+
+            header = f"{'Local Address':<25} | {'Remote Address':<25} | {'Estado':<12} | {'PID':<6} | {'Programa':<15} | {'Ubicación':<60}"
             separator = "-" * len(header)
             output_lines = [header, separator]
+
             for c in conns:
-                line = f"{c['local']:<45} | {c['remote']:<45} | {c['state']:<12}"
+                local_addr = c["local"]
+                remote_addr = c["remote"]
+
+                # Limita IPv6 a un tamaño razonable
+                if ":" in local_addr and len(local_addr) > 25:
+                    local_addr = local_addr[:22] + "..."
+                if ":" in remote_addr and len(remote_addr) > 25:
+                    remote_addr = remote_addr[:22] + "..."
+
+                # Formato alineado dinámico con ubicación del programa
+                line = f"{local_addr:<25} | {remote_addr:<25} | {c['state']:<12} | {str(c['pid']):<6} | {c['program']:<15} | {c['path']:<60}"
                 output_lines.append(line)
+
             result = "\n".join(output_lines)
             update_results(result)
     except Exception as e:
@@ -172,6 +184,9 @@ def handle_directory_analysis():
     result_text.config(state="normal")
     result_text.delete("1.0", tk.END)
     result_text.config(state="disabled")
+    # Configura la fuente monoespaciada en el widget de resultados
+    result_text.config(font=("Consolas", 10))
+    
     path = filedialog.askdirectory(title="Seleccione el directorio a analizar")
     if not path:
         update_results("No se seleccionó ningún directorio.")
@@ -193,38 +208,62 @@ def handle_directory_analysis():
             size /= 1024
         return f"{size:.2f} PB"
 
+    # Ancho fijo para la presentación y longitud máxima del nombre.
+    line_width = 80
+    max_name_length = 50
+
     summary = ""
-    summary += "=" * 50 + "\n"
+    summary += "=" * line_width + "\n"
     summary += "          Resumen del Directorio\n"
-    summary += "=" * 50 + "\n"
+    summary += "=" * line_width + "\n"
     summary += f"Directorio analizado : {path}\n"
     summary += f"Total de archivos    : {total_files}\n"
     summary += f"Tamaño total         : {format_size(total_size)}\n\n"
 
-    summary += "-" * 50 + "\n"
+    summary += "-" * line_width + "\n"
     summary += "      Metadatos Detectados\n"
-    summary += "-" * 50 + "\n"
+    summary += "-" * line_width + "\n"
     summary += f"  Imágenes : {len(image_metadata)}\n"
     summary += f"  PDF      : {len(pdf_metadata)}\n"
-    summary += "-" * 50 + "\n\n"
+    summary += "-" * line_width + "\n\n"
 
-    summary += "=" * 50 + "\n"
+    # Nueva sección: Listado de archivos individuales antes del conteo por extensión
+    summary += "-" * line_width + "\n"
+    summary += "      Archivos Individuales\n"
+    summary += "-" * line_width + "\n"
+    summary += f"{'Nombre del Archivo':<50}  {'Extensión':<10}  {'Tamaño':>12}\n"
+    summary += "-" * line_width + "\n"
+    for root_dir, dirs, files in os.walk(path):
+        for file in files:
+            full_path = os.path.join(root_dir, file)
+            try:
+                size_bytes = os.path.getsize(full_path)
+                size_display = format_size(size_bytes)
+            except Exception:
+                size_display = "N/A"
+            ext = os.path.splitext(file)[1].lower() or "[sin ext]"
+            # Trunca el nombre si excede max_name_length
+            display_name = file if len(file) <= max_name_length else file[:max_name_length-3] + "..."
+            summary += f"{display_name:<50}  {ext:<10}  {size_display:>12}\n"
+    summary += "-" * line_width + "\n\n"
+
+    summary += "=" * line_width + "\n"
     summary += "   Conteo y Tamaño por Extensión\n"
-    summary += "=" * 50 + "\n"
+    summary += "=" * line_width + "\n"
     summary += f"{'Extensión':<15} {'Archivos':>10} {'Tamaño':>15}\n"
-    summary += "-" * 50 + "\n"
+    summary += "-" * line_width + "\n"
     for ext, count in sorted(extensions_count.items()):
-        ext_display = ext if ext else "[sin extensión]"
+        ext_display = ext if ext else "[sin ext]"
         size_display = format_size(extensions_size.get(ext, 0))
         summary += f"{ext_display:<15} {count:>10} {size_display:>15}\n"
-    summary += "-" * 50 + "\n\n"
+    summary += "-" * line_width + "\n\n"
 
     if suspicious_files:
         summary += "¡Alerta! Archivos con Extensiones Sospechosas:\n"
-        summary += "-" * 50 + "\n"
+        summary += "-" * line_width + "\n"
         for file_path in suspicious_files:
             summary += f"{file_path}\n"
-        summary += "-" * 50 + "\n\n"
+        summary += "-" * line_width + "\n\n"
     else:
         summary += "No se detectaron archivos con extensiones sospechosas.\n\n"
 
@@ -237,13 +276,13 @@ def handle_directory_analysis():
 
     if suspicious_image_meta_details:
         summary += "¡Alerta! Metadatos Sospechosos en Imágenes:\n"
-        summary += "-" * 50 + "\n"
+        summary += "-" * line_width + "\n"
         for file_path, items in suspicious_image_meta_details.items():
             summary += f"{file_path}:\n"
             for key, value in items:
                 summary += f"    Clave {key}: {value}\n"
             summary += "\n"
-        summary += "-" * 50 + "\n\n"
+        summary += "-" * line_width + "\n\n"
     else:
         summary += "No se detectaron metadatos sospechosos en imágenes.\n\n"
 
@@ -256,13 +295,13 @@ def handle_directory_analysis():
 
     if suspicious_pdf_meta_details:
         summary += "¡Alerta! Metadatos Sospechosos en Archivos PDF:\n"
-        summary += "-" * 50 + "\n"
+        summary += "-" * line_width + "\n"
         for file_path, items in suspicious_pdf_meta_details.items():
             summary += f"{file_path}:\n"
             for key, value in items:
                 summary += f"    Campo {key}: {value}\n"
             summary += "\n"
-        summary += "-" * 50 + "\n\n"
+        summary += "-" * line_width + "\n\n"
     else:
         summary += "No se detectaron metadatos sospechosos en archivos PDF.\n\n"
 
@@ -275,13 +314,13 @@ def handle_directory_analysis():
 
     if suspicious_pdf_actions:
         summary += "¡Alerta! Acciones JavaScript detectadas en PDFs:\n"
-        summary += "-" * 50 + "\n"
+        summary += "-" * line_width + "\n"
         for pdf_path, actions in suspicious_pdf_actions.items():
             summary += f"{pdf_path}:\n"
             for action_type, js_code in actions:
                 summary += f"    {action_type}: {js_code}\n"
             summary += "\n"
-        summary += "-" * 50 + "\n\n"
+        summary += "-" * line_width + "\n\n"
     else:
         summary += "No se detectaron acciones JavaScript en archivos PDF.\n\n"
 
