@@ -92,6 +92,3 @@ El resultado de los análisis puede guardarse automáticamente en TXT o CSV.
 - Las conexiones de red mostradas son información pública del sistema operativo,
   sin modificar datos internos.
 📌 Desarrollado por: Brian Almada
-
-
-
