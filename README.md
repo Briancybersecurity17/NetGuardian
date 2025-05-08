@@ -1,5 +1,7 @@
 # NetGuardian 🛡️
+
 🔹 Introducción
+
 NetGuardian es una herramienta de seguridad informática diseñada para Windows que permite analizar directorios, extraer y verificar metadatos, escanear conexiones de red, generar y verificar contraseñas, e identificar potenciales riesgos en archivos PDF.
 Su objetivo es facilitar la detección de archivos sospechosos, identificar inyecciones de código en documentos y ayudar a los usuarios a fortalecer sus credenciales.
 
